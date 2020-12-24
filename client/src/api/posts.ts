@@ -4,3 +4,5 @@ import {DefaultPosts} from '../reducers/posts'
 const url = "http://localhost:5000/posts";
 
 export const fetchPosts = () => axios.get<DefaultPosts>(url);
+
+export const createPost = (newPost) => axios.post(url, newPost);

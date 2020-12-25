@@ -1,7 +1,12 @@
-import { FETCH_ALL, STORE_POST } from "../actions/posts-actionTypes";
+import {
+  FETCH_ALL,
+  STORE_POST,
+  UPDATED_POST,
+} from "../actions/posts-actionTypes";
 import { ActionTypes } from "../actions/posts";
 
 export interface IPostBeforeStore {
+  _id?: string;
   creator: string;
   title: string;
   message: string;
@@ -28,6 +33,10 @@ const reducer = (posts: IPost[] = [], action: ActionTypes) => {
       return action.payload;
     case STORE_POST:
       return [...posts, action.payload];
+    case UPDATED_POST:
+      return posts.map((post) =>
+        post._id === action.payload._id ? action.payload : post
+      );
     default:
       return posts as never;
   }

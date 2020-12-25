@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from "react-file-base64";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { createPost } from "../../actions/posts";
+import { createPost, updatePost } from "../../actions/posts";
 import { IPostBeforeStore } from "../../reducers/posts";
+import { RootReducer } from "../../reducers/index";
 
 import useStyles from "./styles";
 
@@ -18,21 +19,36 @@ const initialPostData = {
 
 type Base64Type = {
   base64: string;
-}
+};
 
-const Form = () => {
+type PropTypes = {
+  currentId: string;
+  setCurrentId: (id: string) => void;
+};
+
+const Form: React.FC<PropTypes> = ({ currentId, setCurrentId }) => {
   const [postData, setPostData] = useState<IPostBeforeStore>(initialPostData);
+  const post = useSelector<RootReducer>((state) =>
+    state.posts.find((p) => p._id === currentId) || null
+  ) as IPostBeforeStore | null;
 
   const classes = useStyles();
-
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (post) setPostData(post);
+  }, [post]);
 
   const clear = () => setPostData(initialPostData);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    dispatch(createPost(postData));
+    if (currentId) {
+      dispatch(updatePost(currentId, postData));
+    } else {
+      dispatch(createPost(postData));
+    }
   };
 
   return (
@@ -84,7 +100,7 @@ const Form = () => {
           <FileBase
             type="file"
             multiple={false}
-            onDone={({base64}: Base64Type) =>
+            onDone={({ base64 }: Base64Type) =>
               setPostData({ ...postData, selectedFile: base64 })
             }
           />

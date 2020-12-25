@@ -4,7 +4,7 @@ import FileBase from "react-file-base64";
 import { useDispatch } from "react-redux";
 
 import { createPost } from "../../actions/posts";
-import { IPostData } from "../../reducers/posts";
+import { IPostBeforeStore } from "../../reducers/posts";
 
 import useStyles from "./styles";
 
@@ -16,8 +16,12 @@ const initialPostData = {
   selectedFile: "",
 };
 
+type Base64Type = {
+  base64: string;
+}
+
 const Form = () => {
-  const [postData, setPostData] = useState<IPostData>(initialPostData);
+  const [postData, setPostData] = useState<IPostBeforeStore>(initialPostData);
 
   const classes = useStyles();
 
@@ -80,7 +84,7 @@ const Form = () => {
           <FileBase
             type="file"
             multiple={false}
-            onDone={(base64: string) =>
+            onDone={({base64}: Base64Type) =>
               setPostData({ ...postData, selectedFile: base64 })
             }
           />

@@ -1,16 +1,16 @@
 import { Dispatch } from "redux";
 import * as api from "../api/posts";
-import { DefaultPosts } from "../reducers/posts";
+import { IPost, IPostBeforeStore } from "../reducers/posts";
 import { FETCH_ALL, STORE_POST } from "./posts-actionTypes";
 
 export type ActionTypes = ReturnType<typeof fetchAll> | ReturnType<typeof storePost>;
 
-export const fetchAll = (data: DefaultPosts) => ({
+export const fetchAll = (data: IPost[]) => ({
   type: FETCH_ALL,
   payload: data,
 });
 
-export const storePost = (data: DefaultPosts) => ({
+export const storePost = (data: IPost) => ({
   type: STORE_POST,
   payload: data,
 });
@@ -24,10 +24,10 @@ export const getPosts = () => async (dispatch: Dispatch) => {
   }
 };
 
-export const createPost = (post) => async (dispatch: Dispatch) => {
+export const createPost = (post: IPostBeforeStore) => async (dispatch: Dispatch) => {
   try {
     const { data } = await api.createPost(post);
-    dispatch(fetchAll(data));
+    dispatch(storePost(data));
   } catch (error) {
     console.log(error.message);
   }

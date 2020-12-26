@@ -3,9 +3,9 @@ import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from "react-file-base64";
 import { useDispatch, useSelector } from "react-redux";
 
-import { createPost, updatePost } from "../../actions/posts";
-import { IPostBeforeStore } from "../../reducers/posts";
-import { RootReducer } from "../../reducers/index";
+import { createPost, updatePost } from "../../store/posts/actions";
+import { IPostBeforeStore } from "../../store/posts/types";
+import { RootReducerType } from "../../store/index";
 
 import useStyles from "./styles";
 
@@ -28,8 +28,8 @@ type PropTypes = {
 
 const Form: React.FC<PropTypes> = ({ currentId, setCurrentId }) => {
   const [postData, setPostData] = useState<IPostBeforeStore>(initialPostData);
-  const post = useSelector<RootReducer>((state) =>
-    state.posts.find((p) => p._id === currentId) || null
+  const post = useSelector<RootReducerType>(
+    (state) => state.posts.find((p) => p._id === currentId) || null
   ) as IPostBeforeStore | null;
 
   const classes = useStyles();
@@ -39,16 +39,20 @@ const Form: React.FC<PropTypes> = ({ currentId, setCurrentId }) => {
     if (post) setPostData(post);
   }, [post]);
 
-  const clear = () => setPostData(initialPostData);
+  const clear = () => {
+    setCurrentId('');
+    setPostData(initialPostData);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (currentId) {
-      dispatch(updatePost(currentId, postData));
+      dispatch(updatePost({id: currentId, post: postData}));
     } else {
       dispatch(createPost(postData));
     }
+    clear();
   };
 
   return (
@@ -59,7 +63,9 @@ const Form: React.FC<PropTypes> = ({ currentId, setCurrentId }) => {
         className={`${classes.root} ${classes.form}`}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6">Creating a Memory</Typography>
+        <Typography variant="h6">
+          {currentId ? "Editing" : "Creating"} a Memory
+        </Typography>
         <TextField
           name="creator"
           variant="outlined"

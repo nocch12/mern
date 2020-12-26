@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Container, AppBar, Typography, Grow, Grid } from "@material-ui/core";
 import { useDispatch } from "react-redux";
+import { AppDispatch } from "./store/index";
 
-import { getPosts } from "./actions/posts";
+// import { getPosts } from "./actions/posts";
+import { getPosts } from "./store/posts/actions";
 import Posts from "./components/Posts/Posts";
 import Form from "./components/Form/Form";
 
@@ -15,7 +17,7 @@ type CurrentId = string | null;
 const App: React.FC = () => {
   const [currentId, setCurrentId] = useState<CurrentId>(null);
   const classes = useStyles();
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getPosts());

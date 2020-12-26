@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { Grid, CircularProgress } from "@material-ui/core";
 import Post from "./Post/Post";
-import { RootReducer } from "../../reducers/index";
+import { RootReducerType } from "../../store/index";
 
 import useStyles from "./styles";
 
@@ -11,7 +11,7 @@ type PropTypes = {
 }
 
 const Posts: React.FC<PropTypes> = ({setCurrentId}) => {
-  const posts = useSelector((state: RootReducer) => state.posts);
+  const posts = useSelector((state: RootReducerType) => state.posts);
   const classes = useStyles();
 
   return (

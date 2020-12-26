@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IPost, IPostBeforeStore } from "../reducers/posts";
+import { IPost, IPostBeforeStore } from "../store/posts/types";
 
 const url = "http://localhost:5000/posts";
 
